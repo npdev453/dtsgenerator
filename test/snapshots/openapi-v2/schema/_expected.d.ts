@@ -17,26 +17,26 @@ declare namespace JsonSchemaOrg {
             maxLength?: Schema.Definitions.PositiveInteger;
             minLength?: Schema.Definitions.PositiveIntegerDefault0;
             pattern?: string; // regex
-            additionalItems?: boolean | Schema;
-            items?: Schema | Schema.Definitions.SchemaArray;
+            additionalItems?: boolean | /* Core schema meta-schema */ Schema;
+            items?: /* Core schema meta-schema */ Schema | Schema.Definitions.SchemaArray;
             maxItems?: Schema.Definitions.PositiveInteger;
             minItems?: Schema.Definitions.PositiveIntegerDefault0;
             uniqueItems?: boolean;
             maxProperties?: Schema.Definitions.PositiveInteger;
             minProperties?: Schema.Definitions.PositiveIntegerDefault0;
             required?: Schema.Definitions.StringArray;
-            additionalProperties?: boolean | Schema;
+            additionalProperties?: boolean | /* Core schema meta-schema */ Schema;
             definitions?: {
-                [name: string]: Schema;
+                [name: string]: /* Core schema meta-schema */ Schema;
             };
             properties?: {
-                [name: string]: Schema;
+                [name: string]: /* Core schema meta-schema */ Schema;
             };
             patternProperties?: {
-                [name: string]: Schema;
+                [name: string]: /* Core schema meta-schema */ Schema;
             };
             dependencies?: {
-                [name: string]: Schema | Schema.Definitions.StringArray;
+                [name: string]: /* Core schema meta-schema */ Schema | Schema.Definitions.StringArray;
             };
             enum?: any[];
             type?: Schema.Definitions.SimpleTypes | Schema.Definitions.SimpleTypes[];
@@ -44,13 +44,13 @@ declare namespace JsonSchemaOrg {
             allOf?: Schema.Definitions.SchemaArray;
             anyOf?: Schema.Definitions.SchemaArray;
             oneOf?: Schema.Definitions.SchemaArray;
-            not?: Schema;
+            not?: /* Core schema meta-schema */ Schema;
         }
         namespace Schema {
             namespace Definitions {
                 export type PositiveInteger = number;
                 export type PositiveIntegerDefault0 = number;
-                export type SchemaArray = Schema[];
+                export type SchemaArray = /* Core schema meta-schema */ Schema[];
                 export type SimpleTypes = "array" | "boolean" | "integer" | "null" | "number" | "object" | "string";
                 export type StringArray = string[];
             }
@@ -81,7 +81,7 @@ declare namespace SwaggerIo {
              * The Swagger version of this document.
              */
             swagger: "2.0";
-            info: SchemaJson.Definitions.Info;
+            info: /* General information about the API. */ SchemaJson.Definitions.Info;
             /**
              * The host (name or ip) of the API. Example: 'swagger.io'
              */
@@ -90,23 +90,24 @@ declare namespace SwaggerIo {
              * The base path to the API. Example: '/api'.
              */
             basePath?: string; // ^/
-            schemes?: SchemaJson.Definitions.SchemesList;
+            schemes?: /* The transfer protocol of the API. */ SchemaJson.Definitions.SchemesList;
             /**
              * A list of MIME types accepted by the API.
              */
-            consumes?: SchemaJson.Definitions.MimeType[];
+            consumes?: /* The MIME type of the HTTP message. */ SchemaJson.Definitions.MimeType[];
             /**
              * A list of MIME types the API can produce.
              */
-            produces?: SchemaJson.Definitions.MimeType[];
-            paths: SchemaJson.Definitions.Paths;
-            definitions?: SchemaJson.Definitions.Definitions;
-            parameters?: SchemaJson.Definitions.ParameterDefinitions;
-            responses?: SchemaJson.Definitions.ResponseDefinitions;
+            produces?: /* The MIME type of the HTTP message. */ SchemaJson.Definitions.MimeType[];
+            paths: /* Relative paths to the individual endpoints. They must be relative to the 'basePath'. */ SchemaJson.Definitions.Paths;
+            definitions?: /* One or more JSON objects describing the schemas being consumed and produced by the API. */ SchemaJson.Definitions.Definitions;
+            parameters?: /* One or more JSON representations for parameters */ SchemaJson.Definitions.ParameterDefinitions;
+            responses?: /* One or more JSON representations for responses */ SchemaJson.Definitions.ResponseDefinitions;
             security?: SchemaJson.Definitions.Security;
             securityDefinitions?: SchemaJson.Definitions.SecurityDefinitions;
             tags?: SchemaJson.Definitions.Tag[];
-            externalDocs?: SchemaJson.Definitions.ExternalDocs;
+            externalDocs?: /* information about external documentation */ SchemaJson.Definitions.ExternalDocs;
+            [pattern: string]: /* Any property starting with x- is valid. */ SchemaJson.Definitions.VendorExtension; /* Patterns: ^x- */
         }
         namespace SchemaJson {
             namespace Definitions {
@@ -115,10 +116,12 @@ declare namespace SwaggerIo {
                     name: string;
                     in: "header" | "query";
                     description?: string;
+                    [pattern: string]: /* Any property starting with x- is valid. */ VendorExtension; /* Patterns: ^x- */
                 }
                 export interface BasicAuthenticationSecurity {
                     type: "basic";
                     description?: string;
+                    [pattern: string]: /* Any property starting with x- is valid. */ VendorExtension; /* Patterns: ^x- */
                 }
                 export interface BodyParameter {
                     /**
@@ -137,7 +140,8 @@ declare namespace SwaggerIo {
                      * Determines whether or not this parameter is required or optional.
                      */
                     required?: boolean;
-                    schema: Schema;
+                    schema: /* A deterministic version of a JSON Schema object. */ Schema;
+                    [pattern: string]: /* Any property starting with x- is valid. */ VendorExtension; /* Patterns: ^x- */
                 }
                 export type CollectionFormat = "csv" | "ssv" | "tsv" | "pipes";
                 export type CollectionFormatWithMulti = "csv" | "ssv" | "tsv" | "pipes" | "multi";
@@ -157,13 +161,14 @@ declare namespace SwaggerIo {
                      * The email address of the contact person/organization.
                      */
                     email?: string; // email
+                    [pattern: string]: /* Any property starting with x- is valid. */ VendorExtension; /* Patterns: ^x- */
                 }
                 export type Default = JsonSchemaOrg.Draft04.Schema.Properties.Default;
                 /**
                  * One or more JSON objects describing the schemas being consumed and produced by the API.
                  */
                 export interface Definitions {
-                    [name: string]: Schema;
+                    [name: string]: /* A deterministic version of a JSON Schema object. */ Schema;
                 }
                 export type Enum = JsonSchemaOrg.Draft04.Schema.Properties.Enum;
                 export interface Examples {
@@ -177,6 +182,7 @@ declare namespace SwaggerIo {
                 export interface ExternalDocs {
                     description?: string;
                     url: string; // uri
+                    [pattern: string]: /* Any property starting with x- is valid. */ VendorExtension; /* Patterns: ^x- */
                 }
                 /**
                  * A deterministic version of a JSON Schema object.
@@ -189,8 +195,9 @@ declare namespace SwaggerIo {
                     required?: JsonSchemaOrg.Draft04.Schema.Definitions.StringArray;
                     type: "file";
                     readOnly?: boolean;
-                    externalDocs?: ExternalDocs;
+                    externalDocs?: /* information about external documentation */ ExternalDocs;
                     example?: any;
+                    [pattern: string]: /* Any property starting with x- is valid. */ VendorExtension; /* Patterns: ^x- */
                 }
                 export interface FormDataParameterSubSchema {
                     /**
@@ -230,6 +237,7 @@ declare namespace SwaggerIo {
                     uniqueItems?: UniqueItems;
                     enum?: Enum;
                     multipleOf?: MultipleOf;
+                    [pattern: string]: /* Any property starting with x- is valid. */ VendorExtension; /* Patterns: ^x- */
                 }
                 export interface Header {
                     type: "string" | "number" | "integer" | "boolean" | "array";
@@ -250,6 +258,7 @@ declare namespace SwaggerIo {
                     enum?: Enum;
                     multipleOf?: MultipleOf;
                     description?: string;
+                    [pattern: string]: /* Any property starting with x- is valid. */ VendorExtension; /* Patterns: ^x- */
                 }
                 export interface HeaderParameterSubSchema {
                     /**
@@ -285,6 +294,7 @@ declare namespace SwaggerIo {
                     uniqueItems?: UniqueItems;
                     enum?: Enum;
                     multipleOf?: MultipleOf;
+                    [pattern: string]: /* Any property starting with x- is valid. */ VendorExtension; /* Patterns: ^x- */
                 }
                 export interface Headers {
                     [name: string]: Header;
@@ -309,8 +319,9 @@ declare namespace SwaggerIo {
                      * The terms of service for the API.
                      */
                     termsOfService?: string;
-                    contact?: Contact;
+                    contact?: /* Contact information for the owners of the API. */ Contact;
                     license?: License;
+                    [pattern: string]: /* Any property starting with x- is valid. */ VendorExtension; /* Patterns: ^x- */
                 }
                 export interface JsonReference {
                     $ref: string;
@@ -324,11 +335,12 @@ declare namespace SwaggerIo {
                      * The URL pointing to the license.
                      */
                     url?: string; // uri
+                    [pattern: string]: /* Any property starting with x- is valid. */ VendorExtension; /* Patterns: ^x- */
                 }
                 export type MaxItems = JsonSchemaOrg.Draft04.Schema.Definitions.PositiveInteger;
                 export type MaxLength = JsonSchemaOrg.Draft04.Schema.Definitions.PositiveInteger;
                 export type Maximum = JsonSchemaOrg.Draft04.Schema.Properties.Maximum;
-                export type MediaTypeList = MimeType[];
+                export type MediaTypeList = /* The MIME type of the HTTP message. */ MimeType[];
                 /**
                  * The MIME type of the HTTP message.
                  */
@@ -345,6 +357,7 @@ declare namespace SwaggerIo {
                     authorizationUrl: string; // uri
                     tokenUrl: string; // uri
                     description?: string;
+                    [pattern: string]: /* Any property starting with x- is valid. */ VendorExtension; /* Patterns: ^x- */
                 }
                 export interface Oauth2ApplicationSecurity {
                     type: "oauth2";
@@ -352,6 +365,7 @@ declare namespace SwaggerIo {
                     scopes?: Oauth2Scopes;
                     tokenUrl: string; // uri
                     description?: string;
+                    [pattern: string]: /* Any property starting with x- is valid. */ VendorExtension; /* Patterns: ^x- */
                 }
                 export interface Oauth2ImplicitSecurity {
                     type: "oauth2";
@@ -359,6 +373,7 @@ declare namespace SwaggerIo {
                     scopes?: Oauth2Scopes;
                     authorizationUrl: string; // uri
                     description?: string;
+                    [pattern: string]: /* Any property starting with x- is valid. */ VendorExtension; /* Patterns: ^x- */
                 }
                 export interface Oauth2PasswordSecurity {
                     type: "oauth2";
@@ -366,6 +381,7 @@ declare namespace SwaggerIo {
                     scopes?: Oauth2Scopes;
                     tokenUrl: string; // uri
                     description?: string;
+                    [pattern: string]: /* Any property starting with x- is valid. */ VendorExtension; /* Patterns: ^x- */
                 }
                 export interface Oauth2Scopes {
                     [name: string]: string;
@@ -380,7 +396,7 @@ declare namespace SwaggerIo {
                      * A longer description of the operation, GitHub Flavored Markdown is allowed.
                      */
                     description?: string;
-                    externalDocs?: ExternalDocs;
+                    externalDocs?: /* information about external documentation */ ExternalDocs;
                     /**
                      * A unique identifier of the operation.
                      */
@@ -388,16 +404,17 @@ declare namespace SwaggerIo {
                     /**
                      * A list of MIME types the API can produce.
                      */
-                    produces?: MimeType[];
+                    produces?: /* The MIME type of the HTTP message. */ MimeType[];
                     /**
                      * A list of MIME types the API can consume.
                      */
-                    consumes?: MimeType[];
-                    parameters?: ParametersList;
-                    responses: Responses;
-                    schemes?: SchemesList;
+                    consumes?: /* The MIME type of the HTTP message. */ MimeType[];
+                    parameters?: /* The parameters needed to send a valid API call. */ ParametersList;
+                    responses: /* Response objects names can either be any valid HTTP status code or 'default'. */ Responses;
+                    schemes?: /* The transfer protocol of the API. */ SchemesList;
                     deprecated?: boolean;
                     security?: Security;
+                    [pattern: string]: /* Any property starting with x- is valid. */ VendorExtension; /* Patterns: ^x- */
                 }
                 export type Parameter = BodyParameter | NonBodyParameter;
                 /**
@@ -419,13 +436,14 @@ declare namespace SwaggerIo {
                     options?: Operation;
                     head?: Operation;
                     patch?: Operation;
-                    parameters?: ParametersList;
+                    parameters?: /* The parameters needed to send a valid API call. */ ParametersList;
+                    [pattern: string]: /* Any property starting with x- is valid. */ VendorExtension; /* Patterns: ^x- */
                 }
                 export interface PathParameterSubSchema {
                     /**
                      * Determines whether or not this parameter is required or optional.
                      */
-                    required: "true";
+                    required: true;
                     /**
                      * Determines the location of the parameter.
                      */
@@ -455,13 +473,15 @@ declare namespace SwaggerIo {
                     uniqueItems?: UniqueItems;
                     enum?: Enum;
                     multipleOf?: MultipleOf;
+                    [pattern: string]: /* Any property starting with x- is valid. */ VendorExtension; /* Patterns: ^x- */
                 }
                 /**
                  * Relative paths to the individual endpoints. They must be relative to the 'basePath'.
                  */
                 export interface Paths {
+                    [pattern: string]: /* Any property starting with x- is valid. */ VendorExtension | PathItem; /* Patterns: ^x- | ^/ */
                 }
-                export type Pattern = JsonSchemaOrg.Draft04.Schema.Properties.Pattern; // regex
+                export type Pattern = JsonSchemaOrg.Draft04.Schema.Properties.Pattern /* regex */;
                 export interface PrimitivesItems {
                     type?: "string" | "number" | "integer" | "boolean" | "array";
                     format?: string;
@@ -480,6 +500,7 @@ declare namespace SwaggerIo {
                     uniqueItems?: UniqueItems;
                     enum?: Enum;
                     multipleOf?: MultipleOf;
+                    [pattern: string]: /* Any property starting with x- is valid. */ VendorExtension; /* Patterns: ^x- */
                 }
                 export interface QueryParameterSubSchema {
                     /**
@@ -519,12 +540,14 @@ declare namespace SwaggerIo {
                     uniqueItems?: UniqueItems;
                     enum?: Enum;
                     multipleOf?: MultipleOf;
+                    [pattern: string]: /* Any property starting with x- is valid. */ VendorExtension; /* Patterns: ^x- */
                 }
                 export interface Response {
                     description: string;
-                    schema?: Schema | FileSchema;
+                    schema?: /* A deterministic version of a JSON Schema object. */ Schema | /* A deterministic version of a JSON Schema object. */ FileSchema;
                     headers?: Headers;
                     examples?: Examples;
+                    [pattern: string]: /* Any property starting with x- is valid. */ VendorExtension; /* Patterns: ^x- */
                 }
                 /**
                  * One or more JSON representations for responses
@@ -537,6 +560,7 @@ declare namespace SwaggerIo {
                  * Response objects names can either be any valid HTTP status code or 'default'.
                  */
                 export interface Responses {
+                    [pattern: string]: ResponseValue | /* Any property starting with x- is valid. */ VendorExtension; /* Patterns: ^([0-9]{3})$|^(default)$ | ^x- */
                 }
                 /**
                  * A deterministic version of a JSON Schema object.
@@ -554,7 +578,7 @@ declare namespace SwaggerIo {
                     exclusiveMinimum?: JsonSchemaOrg.Draft04.Schema.Properties.ExclusiveMinimum;
                     maxLength?: JsonSchemaOrg.Draft04.Schema.Definitions.PositiveInteger;
                     minLength?: JsonSchemaOrg.Draft04.Schema.Definitions.PositiveIntegerDefault0;
-                    pattern?: JsonSchemaOrg.Draft04.Schema.Properties.Pattern; // regex
+                    pattern?: JsonSchemaOrg.Draft04.Schema.Properties.Pattern /* regex */;
                     maxItems?: JsonSchemaOrg.Draft04.Schema.Definitions.PositiveInteger;
                     minItems?: JsonSchemaOrg.Draft04.Schema.Definitions.PositiveIntegerDefault0;
                     uniqueItems?: JsonSchemaOrg.Draft04.Schema.Properties.UniqueItems;
@@ -562,18 +586,19 @@ declare namespace SwaggerIo {
                     minProperties?: JsonSchemaOrg.Draft04.Schema.Definitions.PositiveIntegerDefault0;
                     required?: JsonSchemaOrg.Draft04.Schema.Definitions.StringArray;
                     enum?: JsonSchemaOrg.Draft04.Schema.Properties.Enum;
-                    additionalProperties?: Schema | boolean;
+                    additionalProperties?: /* A deterministic version of a JSON Schema object. */ Schema | boolean;
                     type?: JsonSchemaOrg.Draft04.Schema.Properties.Type;
-                    items?: Schema | Schema[];
-                    allOf?: Schema[];
+                    items?: /* A deterministic version of a JSON Schema object. */ Schema | /* A deterministic version of a JSON Schema object. */ Schema[];
+                    allOf?: /* A deterministic version of a JSON Schema object. */ Schema[];
                     properties?: {
-                        [name: string]: Schema;
+                        [name: string]: /* A deterministic version of a JSON Schema object. */ Schema;
                     };
                     discriminator?: string;
                     readOnly?: boolean;
                     xml?: Xml;
-                    externalDocs?: ExternalDocs;
+                    externalDocs?: /* information about external documentation */ ExternalDocs;
                     example?: any;
+                    [pattern: string]: /* Any property starting with x- is valid. */ VendorExtension; /* Patterns: ^x- */
                 }
                 /**
                  * The transfer protocol of the API.
@@ -589,7 +614,8 @@ declare namespace SwaggerIo {
                 export interface Tag {
                     name: string;
                     description?: string;
-                    externalDocs?: ExternalDocs;
+                    externalDocs?: /* information about external documentation */ ExternalDocs;
+                    [pattern: string]: /* Any property starting with x- is valid. */ VendorExtension; /* Patterns: ^x- */
                 }
                 export type UniqueItems = JsonSchemaOrg.Draft04.Schema.Properties.UniqueItems;
                 /**
@@ -604,6 +630,7 @@ declare namespace SwaggerIo {
                     prefix?: string;
                     attribute?: boolean;
                     wrapped?: boolean;
+                    [pattern: string]: /* Any property starting with x- is valid. */ VendorExtension; /* Patterns: ^x- */
                 }
             }
         }
